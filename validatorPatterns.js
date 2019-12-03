@@ -16,3 +16,7 @@ jQuery.validator.addMethod("lockerNumber", function(value,elem){
 jQuery.validator.addMethod("combination", function(value,elem){
     return this.optional(elem) || /^[0-5]?\d-[0-5]?\d-[0-5]?\d$/.test(value);
 },"The combination is invalid");
+
+
+studentString += newContent
+document.getElementById("output").innerHTML = studentString;
