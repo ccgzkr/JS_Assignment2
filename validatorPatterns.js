@@ -1,22 +1,42 @@
 "use strict"
 
-jQuery.validator.addMethod("firstName", function(value,elem){
-    return this.optional(elem) || /^[A-Za-z]+[A-Za-z '-]*[A-Za-z]+$/.test(value);
-},"The input first name is invalid");
+let i = 0;
+let fName = [];
+let lName = [];
+let lockName = [];
+let combinations = [];
+let studentString = "";
 
-jQuery.validator.addMethod("lastName", function(value,elem){
-    return this.optional(elem) || /^[A-Za-z]+[A-Za-z '-]*[A-Za-z]+$/.test(value);
-},"The input last name is invalid");
+document.getElementById("lockerForm").onsubmit = function () { lockerFormSubmit();    
+};
+
+function lockerFormSubmit()
+{
+    let firstName = document.getElementById("firstName").value;
+    let lastName = document.getElementById("lastName").value;
+    let lockerNumber = document.getElementById("lockerNumber").value;
+    let combination = document.getElementById("combination").value;
+
+        let option = document.createElement("option");
+        option.setAttribute("value" , lastName);
+        let text = lastName + ", " + firstName;
+        let textNodeSelectList = document.createTextNode(text);
+        option.append(textNodeSelectList);
+        document.getElementById("student").appendChild(option);
+
+        //
+          // studentString += lastName + ", " + firstName + "\n";
+          // console.log(studentString);
+          // document.getElementById("student").innerHTML = studentString;
 
 
-jQuery.validator.addMethod("lockerNumber", function(value,elem){
-    return this.optional(elem) || /^1?[0-9]{0, 3}$/.test(value);
-},"The locker number is invalid");
+         document.getElementById("selectedLocker").value = lockerNumber;
+         document.getElementById("selectedCombination").value = combination;
 
-jQuery.validator.addMethod("combination", function(value,elem){
-    return this.optional(elem) || /^[0-5]?\d-[0-5]?\d-[0-5]?\d$/.test(value);
-},"The combination is invalid");
-
-
-studentString += newContent
-document.getElementById("output").innerHTML = studentString;
+         let node = document.createElement("li");
+         let list = lockerNumber + ": " + lastName + ", " + firstName;
+         let textnode = document.createTextNode(list);
+         node.appendChild(textnode);
+         document.getElementById("lockerList").appendChild(node);
+    i++;
+}
