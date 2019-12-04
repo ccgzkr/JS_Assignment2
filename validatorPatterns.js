@@ -128,7 +128,7 @@ lockerinfo.html
     
 lockerinfo.js
 -------------------------------------------------------------------------------------------------    
-"use strict"
+"use strict";
 
 let i = 0;
 // let fName = [];
@@ -137,48 +137,133 @@ let i = 0;
 // let combinations = [];
 
 let students = [];
+let ret = true;
+
+const firstNameElement = document.getElementById("firstName");
+const lastNameElement = document.getElementById("lastName");
+const lockerNumberElement = document.getElementById("lockerNumber");
+const combinationElement = document.getElementById("combination");
+
+jQuery.validator.addMethod("nameChars", function (value, elem) {
+    ret &= this.optional(elem) || /^[A-Za-z]+[A-Za-z '-]*[A-Za-z]+$/.test(value);
+    return ret;
+}, "The input name is invalid");
+
+jQuery.validator.addMethod("lockerNumberChars", function (value, elem) {
+    ret &= this.optional(elem) || /^1?[0-9]{0, 3}$/.test(value);
+    return ret;}, "The locker number is invalid"
+);
+
+jQuery.validator.addMethod("combinationChars", function(value, elem) {
+        ret &= this.optional(elem) || /^[0-5]?\d-[0-5]?\d-[0-5]?\d$/.test(value);
+        return ret;
+    }, "The combination is invalid"
+);
 
 window.onload = init;
-function init() {
-    document.getElementById("lockerForm").onsubmit = lockerFormSubmit;
-}
-function lockerFormSubmit(event)
-{
-    let firstName = document.getElementById("firstName").value;
-    let lastName = document.getElementById("lastName").value;
-    let lockerNumber = document.getElementById("lockerNumber").value;
-    let combination = document.getElementById("combination").value;
 
-    let student = {"firstName": firstName, "lastName": lastName, "lockerNumber": lockerNumber, "combination": combination};
+function init() {
+    document.getElementById("lockerForm").onsubmit = inputValidator;
+}
+
+function inputValidator(event) {
+    event.preventDefault();
+
+    $(document).ready(function(){
+        $("#lockerForm").validate({
+            rules: {
+                firstName: {
+                    required: true,
+                    nameChars: true
+
+                },
+                lastName: {
+                    required: true,
+                    nameChars: true
+
+                },
+                lockerNumber: {
+                    required: true,
+                    lockerNumberChars: true
+
+                },
+                combination: {
+                    required: true,
+                    combinationChars: true
+                },
+            },
+            messages:{
+                firstName:{
+                    required: "Your name?",
+                    nameChars: "Invalid format"
+                },
+                lastName:{
+                    required: "Your name?",
+                    nameChars: "Invalid format"
+                },
+                lockerNumber:{
+                    required: "Your locker number?",
+                    lockerNumberChars: "Invalid format"
+                },
+                combination:{
+                    required: "Your combination?",
+                    combinationChars: "Invalid format"
+                }
+            }
+        })
+    });
+
+    if (ret) {
+        let firstName = firstNameElement.value;
+        let lastName = lastNameElement.value;
+        let lockerNumber = lockerNumberElement.value;
+        let combination = combinationElement.value;
+        lockerFormSubmit(firstName, lastName, lockerNumber, combination);
+    }
+
+    ret = true;
+}
+
+function lockerFormSubmit(firstName, lastName, lockerNumber, combination) {
+    let student = {
+        firstName: firstName,
+        lastName: lastName,
+        lockerNumber: lockerNumber,
+        combination: combination
+    };
     students.push(student);
 
-
-
-    let x = document.getElementById("student");
-    let c = document.createElement("option");
-    c.text = students[i]["lastName"] + ", " + students[i]["firstName"];
-    x.options.add(c, i);
+    let studentRequestItem = document.getElementById("student");
+    let optionItem = document.createElement("option");
+    optionItem.text = students[i]["lastName"] + ", " + students[i]["firstName"];
+    studentRequestItem.options.add(optionItem, i);
     document.getElementById("selectedLocker").value = students[i]["lockerNumber"];
     document.getElementById("selectedCombination").value = students[i]["combination"];
-    x.options[i].selected = true;
+    studentRequestItem.options[i].selected = true;
 
     let node = document.createElement("li");
-    let list = students[i]["lockerNumber"] + ": " + students[i]["lastName"] + ", " + students[i]["firstName"];
-    let textnode = document.createTextNode(list);
+    let lockerInforList = students[i]["lockerNumber"] + ": " +
+        students[i]["lastName"] + ", " +
+        students[i]["firstName"];
+    let textnode = document.createTextNode(lockerInforList);
     node.appendChild(textnode);
-    document.getElementById("lockerList").insertBefore(node , document.getElementById("lockerList").firstChild);
+    document.getElementById("lockerList").insertBefore(node, document.getElementById("lockerList").firstChild);
+
+    if (student.length !== 0) {
+        document.getElementById("lockerListComment").innerHTML = "";
+    }
+
     i++;
 
     document.getElementById("firstName").value = "";
     document.getElementById("lastName").value = "";
     document.getElementById("lockerNumber").value = "";
     document.getElementById("combination").value = "";
-    event.preventDefault();
 }
 
-function setLockerFields()
-{
+function setLockerFields() {
     let index = document.getElementById("student").options.selectedIndex;
     document.getElementById("selectedLocker").value = students[index]["lockerNumber"];
     document.getElementById("selectedCombination").value = students[index]["combination"];
 }
+
