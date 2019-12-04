@@ -4,7 +4,7 @@ validatorPatterns
 
 jQuery.validator.addMethod("firstName", function(value,elem){
     return this.optional(elem) || /^[A-Za-z]+[A-Za-z '-]*[A-Za-z]+$/.test(value);
-},"The input first name is invalid");
+}"The input first name is invalid");
 
 jQuery.validator.addMethod("lastName", function(value,elem){
     return this.optional(elem) || /^[A-Za-z]+[A-Za-z '-]*[A-Za-z]+$/.test(value);
@@ -104,7 +104,7 @@ lockerinfo.html
         <form id="requestForm" action="#">
             <fieldset>
                 <label for="student">Select a student:</label>
-                <select id="student">
+                <select id="student" onclick="setLockerFields()">
                 </select>
 
                 <label for="selectedLocker">Locker Number</label>
@@ -117,7 +117,7 @@ lockerinfo.html
         </form>
 
         <p>Lockers added:</p>
-        <ol id="lockerList"></ol>
+        <ul id="lockerList"></ul>
         <p>No lockers added yet</p>
     </body>
 </html>
@@ -160,12 +160,25 @@ function lockerFormSubmit(event)
     x.options.add(c, i);
     document.getElementById("selectedLocker").value = students[i]["lockerNumber"];
     document.getElementById("selectedCombination").value = students[i]["combination"];
+    x.options[i].selected = true;
 
     let node = document.createElement("li");
     let list = students[i]["lockerNumber"] + ": " + students[i]["lastName"] + ", " + students[i]["firstName"];
     let textnode = document.createTextNode(list);
     node.appendChild(textnode);
-    document.getElementById("lockerList").appendChild(node);
+    document.getElementById("lockerList").insertBefore(node , document.getElementById("lockerList").firstChild);
     i++;
+
+    document.getElementById("firstName").value = "";
+    document.getElementById("lastName").value = "";
+    document.getElementById("lockerNumber").value = "";
+    document.getElementById("combination").value = "";
     event.preventDefault();
+}
+
+function setLockerFields()
+{
+    let index = document.getElementById("student").options.selectedIndex;
+    document.getElementById("selectedLocker").value = students[index]["lockerNumber"];
+    document.getElementById("selectedCombination").value = students[index]["combination"];
 }
