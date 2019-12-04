@@ -72,54 +72,57 @@ function insertStudent(students, newStudent){
 
 lockerinfo.html
 -------------------------------------------------------------------------------------------------
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" type="text/css" href="css/form.css" />
-        <title>Student Locker Information</title>
-        <script src="scripts/lockerInfo.js" defer></script>
-    </head>
 
-    <body>
-        <form id="lockerForm" action="#">
-            <fieldset>
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="firstName" />
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="css/form.css" />
+    <title>Student Locker Information</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="lockerinfor.js" defer></script>
+</head>
 
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="lastName" />
+<body>
+<form id="lockerForm" action="#">
+    <fieldset>
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" />
 
-                <label for="lockerNumber">Locker Number</label>
-                <input type="number" id="lockerNumber" name="lockerNumber" />
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" />
 
-                <label for="combination">Locker Combination</label>
-                <input type="text" id="combination" name="combination" />
-                
-                <input type="submit" value="Add" />
-                <input type="reset" value="Clear" />
-            </fieldset>
-        </form>
-        
-        <form id="requestForm" action="#">
-            <fieldset>
-                <label for="student">Select a student:</label>
-                <select id="student" onclick="setLockerFields()">
-                </select>
+        <label for="lockerNumber">Locker Number</label>
+        <input type="number" id="lockerNumber" name="lockerNumber" />
 
-                <label for="selectedLocker">Locker Number</label>
-                <input type="number" id="selectedLocker" name="lockerNumber" readonly="readonly" />
+        <label for="combination">Locker Combination</label>
+        <input type="text" id="combination" name="combination" />
 
-                <label for="selectedCombination">Combination is:</label>
-                <input type="text" id="selectedCombination"
-                       readonly="readonly" />
-            </fieldset>
-        </form>
+        <input type="submit" value="Add" />
+        <input type="reset" value="Clear" />
+    </fieldset>
+</form>
 
-        <p>Lockers added:</p>
-        <ul id="lockerList"></ul>
-        <p>No lockers added yet</p>
-    </body>
+<form id="requestForm" action="#">
+    <fieldset>
+        <label for="student">Select a student:</label>
+        <select id="student" onclick="setLockerFields()">
+        </select>
+
+        <label for="selectedLocker">Locker Number</label>
+        <input type="number" id="selectedLocker" name="lockerNumber" readonly="readonly" />
+
+        <label for="selectedCombination">Combination is:</label>
+        <input type="text" id="selectedCombination" readonly="readonly" />
+    </fieldset>
+</form>
+
+<p>Lockers added:</p>
+<ul id="lockerList"></ul>
+<p id="lockerListComment">No lockers added yet</p>
+</body>
+
 </html>
 
     
@@ -130,19 +133,7 @@ lockerinfo.js
 -------------------------------------------------------------------------------------------------    
 "use strict";
 
-let i = 0;
-// let fName = [];
-// let lName = [];
-// let lockName = [];
-// let combinations = [];
-
-let students = [];
-let ret = true;
-
-const firstNameElement = document.getElementById("firstName");
-const lastNameElement = document.getElementById("lastName");
-const lockerNumberElement = document.getElementById("lockerNumber");
-const combinationElement = document.getElementById("combination");
+window.onload = init;
 
 jQuery.validator.addMethod("nameChars", function (value, elem) {
     ret &= this.optional(elem) || /^[A-Za-z]+[A-Za-z '-]*[A-Za-z]+$/.test(value);
@@ -160,7 +151,14 @@ jQuery.validator.addMethod("combinationChars", function(value, elem) {
     }, "The combination is invalid"
 );
 
-window.onload = init;
+let i = 0;
+let students = [];
+let ret = true;
+
+const firstNameElement = document.getElementById("firstName");
+const lastNameElement = document.getElementById("lastName");
+const lockerNumberElement = document.getElementById("lockerNumber");
+const combinationElement = document.getElementById("combination");
 
 function init() {
     document.getElementById("lockerForm").onsubmit = inputValidator;
@@ -226,10 +224,10 @@ function inputValidator(event) {
 
 function lockerFormSubmit(firstName, lastName, lockerNumber, combination) {
     let student = {
-        firstName: firstName,
-        lastName: lastName,
-        lockerNumber: lockerNumber,
-        combination: combination
+        "firstName": firstName,
+        "lastName": lastName,
+        "lockerNumber": lockerNumber,
+        "combination": combination
     };
     students.push(student);
 
