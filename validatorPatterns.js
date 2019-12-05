@@ -72,7 +72,8 @@ function insertStudent(students, newStudent){
 
 lockerinfo.html
 -------------------------------------------------------------------------------------------------
-<!DOCTYPE html>
+
+    <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -124,7 +125,6 @@ lockerinfo.html
     </body>
 </html>
 
-    
 
     
 lockerinfo.js
@@ -137,8 +137,8 @@ let students = [];
 
 window.onload = init;
 function init() {
-    document.getElementById("lockerForm").onsubmit = lockerFormSubmit;
     document.getElementById("lockerForm").onsubmit = validate;
+    document.getElementById("lockerForm").onsubmit = lockerFormSubmit;
 }
 function lockerFormSubmit(event)
 {
@@ -146,7 +146,21 @@ function lockerFormSubmit(event)
     let lastName = document.getElementById("lastName").value;
     let lockerNumber = document.getElementById("lockerNumber").value;
     let combination = document.getElementById("combination").value;
-
+    let lInput = document.getElementById("lockerNumber").value;
+    for(let k = 0; k < students.length; k++)
+    {
+        if(k !== i) {
+            console.log(students[k]["lockerNumber"].value);
+            if (students[k]["lockerNumber"] === lInput) {
+                alert("Repeating input of locker number");
+                document.getElementById("firstName").value = "";
+                document.getElementById("lastName").value = "";
+                document.getElementById("lockerNumber").value = "";
+                document.getElementById("combination").value = "";
+                return false;
+            }
+        }
+    }
     let student = {"firstName": firstName, "lastName": lastName, "lockerNumber": lockerNumber, "combination": combination};
     students.push(student);
 
@@ -234,8 +248,7 @@ function validate1()
                     pattern: "Invalid format"
                 }
             },
-            submitHandler: lockerFormSubmit,
-
+            submitHandler: lockerFormSubmit
         });
     });
 }
