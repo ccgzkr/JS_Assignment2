@@ -73,7 +73,7 @@ function insertStudent(students, newStudent){
 lockerinfo.html
 -------------------------------------------------------------------------------------------------
 
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -94,7 +94,7 @@ lockerinfo.html
                 <input type="text" id="lastName" name="lastName" required pattern="[A-Za-z]+[A-Za-z '-]*[A-Za-z]+"/>
 
                 <label for="lockerNumber">Locker Number</label>
-                <input type="number" id="lockerNumber" name="lockerNumber" required pattern="(1[0-9]{3,3}|[1-9]+[0-9]{0,2}|0)"/>
+                <input type="text" id="lockerNumber" name="lockerNumber" required pattern="(1\d{3}|[1-9]\d{2}|[1-9]\d|[1-9])" />
 
                 <label for="combination">Locker Combination</label>
                 <input type="text" id="combination" name="combination" required pattern="[0-5]?\d-[0-5]?\d-[0-5]?\d" />
@@ -138,9 +138,9 @@ let students = [];
 window.onload = init;
 function init() {
     document.getElementById("lockerForm").onsubmit = validate;
-    document.getElementById("lockerForm").onsubmit = lockerFormSubmit;
+    //document.getElementById("lockerForm").onsubmit = lockerFormSubmit;
 }
-function lockerFormSubmit(event)
+function lockerFormSubmit()
 {
     let firstName = document.getElementById("firstName").value;
     let lastName = document.getElementById("lastName").value;
@@ -150,7 +150,7 @@ function lockerFormSubmit(event)
     for(let k = 0; k < students.length; k++)
     {
         if(k !== i) {
-            console.log(students[k]["lockerNumber"].value);
+
             if (students[k]["lockerNumber"] === lInput) {
                 alert("Repeating input of locker number");
                 document.getElementById("firstName").value = "";
@@ -171,6 +171,7 @@ function lockerFormSubmit(event)
     document.getElementById("selectedLocker").value = students[i]["lockerNumber"];
     document.getElementById("selectedCombination").value = students[i]["combination"];
     selectList.options[i].selected = true;
+    sortSelectList();
 
     let node = document.createElement("li");
     let list = students[i]["lockerNumber"] + ": " + students[i]["lastName"] + ", " + students[i]["firstName"];
@@ -178,13 +179,24 @@ function lockerFormSubmit(event)
     node.appendChild(textnode);
     document.getElementById("lockerList").insertBefore(node , document.getElementById("lockerList").firstChild);
     document.getElementById("statement").innerHTML = "";
+
     i++;
+
 
     document.getElementById("firstName").value = "";
     document.getElementById("lastName").value = "";
     document.getElementById("lockerNumber").value = "";
     document.getElementById("combination").value = "";
-    //event.preventDefault();
+}
+
+function sortSelectList()
+{
+    $(function() {
+        let select = $("select");
+        select.html(select.find("option").sort(function(x, y) {
+            return $(x).text() > $(y).text() ? 1 : -1;
+        }));
+    });
 }
 
 function setLockerFields()
@@ -197,6 +209,7 @@ function setLockerFields()
 function validate(event) {
     event.preventDefault();
     validate1();
+    lockerFormSubmit();
 }
 function validate1()
 {
@@ -230,7 +243,7 @@ function validate1()
                 }
             },
 
-            message: {
+            messages: {
                 fName1: {
                     required: "Invalid format",
                     pattern: "Invalid format"
@@ -248,7 +261,7 @@ function validate1()
                     pattern: "Invalid format"
                 }
             },
-            submitHandler: lockerFormSubmit
+             //submitHandler: lockerFormSubmit
         });
     });
 }
